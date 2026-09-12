@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector(".size-input")
+            form.addEventListener("submit", (event) => {
+                event.preventDefault()
+                const input = form.querySelector(".size");
+                const size = input.value;
+                createPixels(size);
+            });
+            const container = document.querySelector(".container")
+            let dragging = false
+            container.addEventListener("pointerdown", (e) => {
+                e.preventDefault();
+                dragging = true;
+            });
+            container.addEventListener("pointermove", (event) => {
+                if (dragging === true) {
+                    const pixel = event.target;
+                    changeColor(pixel);
+                }
+            });
+            document.addEventListener("pointerup", () => {
+                dragging = false;
+            });
+        });
+
+        function createPixels (size) {
+            if (size > 100) {
+                alert("size cannot be bigger than 100");
+                return;
+            } 
+            const container = document.querySelector(".container");
+            while (container.firstElementChild !== null) {
+                container.removeChild(container.firstElementChild);
+            }
+            for (let i = 0; i < size * size; i++) {
+                const div = document.createElement("div");
+                div.classList.add("pixel");
+                div.darkness = 0;
+                div.colorChanged = false;
+                container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+                container.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+                container.appendChild(div);
+
+            }
+        }
+
+        function changeColor (pixel) {
+            if (pixel.colorChanged === false) {
+                pixel.r = Math.round(Math.random() * 256)
+                pixel.b = Math.round(Math.random() * 256)
+                pixel.g = Math.round(Math.random() * 256)
+                pixel.style.backgroundColor = `rgb(${pixel.r}, ${pixel.b}, ${pixel.g})`
+                pixel.colorChanged = true;
+                console.log(pixel.dataset)
+            }
+            else {
+                pixel.darkness += 0.1
+                pixel.style.backgroundColor = `rgb(${pixel.r * (1 - pixel.darkness)}, ${pixel.g * (1 - pixel.darkness)}, ${pixel.b * (1 - pixel.darkness)})`
+                console.log(pixel.r)
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <form class="size-input">
+        <input class="size" autocomplete="off" autofocus placeholder="Size" type="number">
+        <button type="submit">Submit</button>
+    </form>
+    <div class="container"></div>
+</body>
+</html>

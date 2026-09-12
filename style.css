@@ -1,0 +1,16 @@
+body {
+    background-color: black;
+}
+
+.container {
+    display: grid;
+    width: 99vh;
+    height: 99vh;
+}
+
+.pixel {
+    display: grid;
+    border-width: 2px;
+    user-select: none;
+    background-color: white;
+}
